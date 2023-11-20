@@ -1,0 +1,29 @@
+{%extends "base.html"%}
+
+{%block title%}レビュー投稿{%endblock%}
+
+{%block h1%}レビュー投稿{%endblock%}
+
+{%block content%}
+    <form method="post" class="p-4 bg-light border border-success rounded form-group">
+        {%csrf_token%}
+        <label for="">対象書式</label>
+        <input class="form-control" value="{{BookID.title}}" type="text" readonly>
+        <label for="">タイトル</label>
+        <input class="form-control" type="text" name="review_title">
+        <label for="">本文</label>
+        <textarea class="form-control" name="review_text" id="" cols="" rows="3"></textarea>
+        <label for="">星の数</label>
+        <input class="form-control" type="text" name="review_rate">
+        <input class="form-control" type="submit" value="作成する">
+    </form>
+{%endblock%}
+
+<!--
+    book_info = models.ForeignKey(Book,on_delete=models.CASCADE)
+    review_title = models.CharField(max_length=100)
+    review_text = models.TextField()
+    review_rate = models.IntegerField(choices=RATE_CHOICES)
+    review_user = models.ForeignKey("auth.User",on_delete=models.CASCADE)
+
+-->
