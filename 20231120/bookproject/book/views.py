@@ -18,7 +18,7 @@ class DetailBookView(generic.DetailView):
 class CreateBookView(generic.CreateView):
     template_name = "book/book_create.html"
     model = models.Book
-    fields = ("title","text","category",)
+    fields = ("title","text","category","thumbnail",)
     success_url = reverse_lazy("book:list-book")
 
 class DeleteBookView(generic.DeleteView):
@@ -29,7 +29,7 @@ class DeleteBookView(generic.DeleteView):
 class UpdateBookView(generic.UpdateView):
     template_name = "book/book_update.html"
     model = models.Book
-    fields = ("title","text","category",)
+    fields = ("title","text","category","thumbnail",)
     success_url = reverse_lazy("book:list-book")
 
 def index(request):

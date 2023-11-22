@@ -9,6 +9,7 @@ RATE_CHOICE = [(x,str(x)) for x in range(0,consts.MAX_RATE+1)]
 class Book(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
+    thumbnail = models.ImageField(null=True,blank=True)
     category = models.CharField(max_length=100,choices=CATEGORY)
 
     def __str__(self):
