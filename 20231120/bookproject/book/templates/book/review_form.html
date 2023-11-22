@@ -1,0 +1,25 @@
+{%extends "base.html"%}
+{%block title%}レビュー投稿{%endblock%}
+{%block h1%}レビュー投稿{%endblock%}
+{%block content%}
+<form class="p-4 m-4 bg-light border border-success rounded form-group" method="post">
+    {%csrf_token%}
+    <label for="">対象書籍</label>
+    <input class="form-control" value="{{book.title}}" readonly type="text">
+    <label for="">タイトル</label>
+    <input class="form-control" name="title">
+    <label for="">本文</label>
+    <textarea class="form-control" name="text" rows="3"></textarea>
+    <label for="">星の数</label>
+    <select class="form-control" name="rate">
+        <option value="0">0(最低)</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3(普通)</option>
+        <option value="4">4</option>
+        <option value="5">5(最高)</option>
+    </select>
+    <input type="hidden" name="book" value="{{book.id}}">
+    <button class="btn btn-success mt-4" type="submit">投稿する</button>
+</form>
+{%endblock%}
