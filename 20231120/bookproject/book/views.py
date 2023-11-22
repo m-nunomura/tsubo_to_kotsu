@@ -30,5 +30,5 @@ class UpdateBookView(generic.UpdateView):
     success_url = reverse_lazy("book:list-book")
 
 def index(request):
-    print("index_view is called")
-    return render(request,"book/index.html",{"somedata":100})
+    object_list = models.Book.objects.order_by("category")
+    return render(request,"book/index.html",{"object_list":object_list})
