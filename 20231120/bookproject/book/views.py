@@ -2,7 +2,6 @@ from django.shortcuts import render,redirect
 from django.views import generic
 from . import models
 from django.urls import reverse_lazy
-from django.contrib.auth import logout
 
 # Create your views here.
 class ListBookView(generic.ListView):
@@ -33,7 +32,3 @@ class UpdateBookView(generic.UpdateView):
 def index(request):
     object_list = models.Book.objects.order_by("category")
     return render(request,"book/index.html",{"object_list":object_list})
-
-def logout_view(request):
-    logout(request)
-    return redirect("book:index")
