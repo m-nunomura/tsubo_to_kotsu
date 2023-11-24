@@ -7,3 +7,7 @@ from . import models
 class ListBookView(generic.ListView):
     template_name = "book/book_list.html"
     model = models.Book
+
+class DetailBookView(generic.DetailView):
+    template_name = "book/book_detail.html"
+    model = models.Book
