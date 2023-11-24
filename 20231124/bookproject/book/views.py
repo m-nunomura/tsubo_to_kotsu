@@ -29,3 +29,7 @@ class UpdateBookView(generic.UpdateView):
     model = models.Book
     fields = ("title","text","category",)
     success_url = reverse_lazy("book:list-book")
+
+def index_view(request):
+    print("index_view is called")
+    return render(request,"book/index.html",{"somedata":100})
