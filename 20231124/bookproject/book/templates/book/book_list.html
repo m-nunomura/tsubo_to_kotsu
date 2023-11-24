@@ -6,7 +6,7 @@
     <h5 class="card-header">{{item.title}}</h5>
     <div class="card-body">
         <p class="card-text">{{item.text}}</p>
-        <a class="btn btn-primary" href="#">Go somewhere</a>
+        <a class="btn btn-primary" href="{%url 'book:detail-book' item.id%} ">詳細へ</a>
         <h6 class="card-title">{{item.category}}</h6>
     </div>
 </div>
