@@ -12,3 +12,4 @@ urlpatterns = [
     path("book/<int:pk>/update/",views.UpdateBookView.as_view(),name="update-book"),
     path("book/<int:book_pk>/review/",views.CreateReviewView.as_view(),name="review"),
 ]
+
