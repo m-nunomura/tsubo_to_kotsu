@@ -9,12 +9,16 @@ from django.urls import reverse_lazy,reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Avg
+from django.core.paginator import Paginator
+from . import consts
+
 
 # Create your views here.
 
 class ListBookView(LoginRequiredMixin,generic.ListView):
     template_name = "book/book_list.html"
     model = models.Book
+    paginate_by = consts.ITEM_PER_PAGE
 
 class DetailBookView(LoginRequiredMixin,generic.DetailView):
     template_name = "book/book_detail.html"
@@ -62,7 +66,10 @@ class UpdateBookView(LoginRequiredMixin,generic.UpdateView):
 def index_view(request):
     object_list = models.Book.objects.order_by("-id")
     ranking_list = models.Book.objects.annotate(avg_rating=Avg("review__rate")).order_by("-avg_rating")
-    return render(request,"book/index.html",{"object_list":object_list,"ranking_list":ranking_list})
+    paginator = Paginator(ranking_list,consts.ITEM_PER_PAGE)
+    page_number = request.GET.get("page",1)
+    page_obj = paginator.page(page_number)
+    return render(request,"book/index.html",{"object_list":object_list,"ranking_list":ranking_list,"page_obj":page_obj})
 
 class CreateReviewView(LoginRequiredMixin,generic.CreateView):
     template_name = "book/review_form.html"
