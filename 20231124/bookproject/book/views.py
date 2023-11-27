@@ -1,4 +1,5 @@
 from typing import Any
+from django.db import models
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render,redirect
@@ -6,6 +7,7 @@ from django.views import generic
 from . import models
 from django.urls import reverse_lazy,reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -23,16 +25,38 @@ class CreateBookView(LoginRequiredMixin,generic.CreateView):
     fields = ("title","text","category","thumbnail",)
     success_url = reverse_lazy("book:list-book")
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 class DeleteBookView(LoginRequiredMixin,generic.DeleteView):
     template_name = "book/book_delete.html"
     model = models.Book
     success_url = reverse_lazy("book:list-book")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_success_url(self):
+        return reverse("book:detail-book",kwargs={"pk":self.object.id})
 
 class UpdateBookView(LoginRequiredMixin,generic.UpdateView):
     template_name = "book/book_update.html"
     model = models.Book
     fields = ("title","text","category","thumbnail",)
     success_url = reverse_lazy("book:list-book")
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_success_url(self):
+        return reverse("book:detail-book",kwargs={"pk":self.object.id})
 
 def index_view(request):
     object_list = models.Book.objects.order_by("category")
