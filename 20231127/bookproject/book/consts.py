@@ -1,0 +1,1 @@
+CATEGORY = (("bussiness","ビジネス"),("life","生活"),("other","その他"),)
