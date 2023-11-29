@@ -6,6 +6,7 @@ from . import consts
 class Book(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField()
+    image = models.ImageField(null=True,blank=True)
     category = models.CharField(max_length=100,choices=consts.CATEGORY)
 
     def __str__(self):
