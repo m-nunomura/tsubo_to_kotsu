@@ -8,6 +8,7 @@ class Book(models.Model):
     text = models.TextField()
     image = models.ImageField(null=True,blank=True)
     category = models.CharField(max_length=100,choices=consts.CATEGORY)
+    user = models.ForeignKey("auth.user",on_delete=models.CASCADE)
 
     def __str__(self):
         return self.title

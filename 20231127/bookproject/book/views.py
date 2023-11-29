@@ -1,44 +1,70 @@
 from typing import Any
+from django.db import models
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import generic
 from django.urls import reverse_lazy,reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from . import models
 
 # Create your views here.
 
 
-class ListBookView(generic.ListView):
+class ListBookView(LoginRequiredMixin,generic.ListView):
     template_name = "book/book_list.html"
     model = models.Book
 
-class DetailBookView(generic.DetailView):
+class DetailBookView(LoginRequiredMixin,generic.DetailView):
     template_name = "book/book_detail.html"
     model = models.Book
 
-class CreateBookView(generic.CreateView):
+class CreateBookView(LoginRequiredMixin,generic.CreateView):
     template_name = "book/book_create.html"
     model = models.Book
     fields = ("title","text","category","image",)
     success_url = reverse_lazy("book:list-book")
 
-class DeleteBookView(generic.DeleteView):
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class DeleteBookView(LoginRequiredMixin,generic.DeleteView):
     template_name = "book/book_delete.html"
     model = models.Book
     success_url = reverse_lazy("book:list-book")
 
-class UpdateBookView(generic.UpdateView):
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        
+        return obj
+
+class UpdateBookView(LoginRequiredMixin,generic.UpdateView):
     template_name = "book/book_update.html"
     model = models.Book
     fields = ("title","text","category","image",)
     success_url = reverse_lazy("book:list-book")
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+
+        if obj.user != self.request.user:
+            raise PermissionDenied
+        
+        return obj
+    
+    def get_success_url(self):
+        return reverse("book:detail-book",kwargs={"pk":self.object.id})
+
 def index(request):
     object_list = models.Book.objects.order_by("category")
     return render(request,"book/book_index.html",{"object_list":object_list})
 
-class CreateReviewView(generic.CreateView):
+class CreateReviewView(LoginRequiredMixin,generic.CreateView):
     template_name = "book/book_review.html"
     model = models.Review
     fields = ("book","title","text","rate",)
